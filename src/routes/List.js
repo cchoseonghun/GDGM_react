@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { Badge } from 'react-bootstrap';
+import { Container, Badge } from 'react-bootstrap';
 
 import Navs from './Navs.js';
 
@@ -14,13 +14,13 @@ function List(){
     return (
         <>
         <Navs />
-        {
-            list.map((a, i)=>{
-                return (
-                    <h1 key={i}><Badge bg="success" onClick={()=>{alert('레이드정보노출')}}>{a.name}</Badge></h1>
-                )
-            })
-        }
+        <Container className="mt-5">
+            {
+                list.length > 0 ?
+                list.map( (a, i) => <h1 key={i}><Badge bg="success" onClick={()=>{alert('레이드정보노출')}}>{a.name}</Badge></h1> ) : 
+                <h1>가입된 공격대가 없습니다.</h1>
+            }
+        </Container>
         </>
     )
 
