@@ -2,18 +2,13 @@ import { configureStore, createSlice } from "@reduxjs/toolkit";
 
 let user = createSlice({
     name: 'user', 
-    initialState: {
-        _id: '', 
-        id: '', 
-    }, 
+    initialState: { isLogined: 0 }, 
     reducers: {
-        setLogin(state, action){
-            let data = action.payload;
-            state._id = data._id;
-            state.id = data.id;
+        setUser(state, action){
+            state.isLogined = parseInt(action.payload);
         }, 
     }
 })
-export let { setLogin } = user.actions
+export let { setUser } = user.actions
 
 export default user
