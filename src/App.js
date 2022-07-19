@@ -5,8 +5,9 @@ import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
 import { Routes, Route, Link } from 'react-router-dom';
-import { lazy } from 'react';
+import { lazy, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { setUser } from './store/userSlice';
 
 import Login from './routes/Login.js';
 import List from './routes/List.js';
@@ -17,14 +18,19 @@ function App() {
   let state = useSelector((state)=> state );
   let dispatch = useDispatch(); 
 
+  useEffect(()=>{
+    if(localStorage.getItem('session_user') != null) {
+      dispatch(setUser(1));
+    }
+  })
+
   return (
     <div className="App">
-      { state.user._id.length > 0 && <p>로그인된 아이디: {state.user.id}</p> }
       <Routes>
         {
-          state.user._id.length > 0 ?
-          <Route path='/' element={ <List /> }></Route> : 
-          <Route path='/' element={ <Login /> }></Route>
+          state.user.isLogined === 0 ?
+          <Route path='/' element={ <Login /> }></Route> : 
+          <Route path='/' element={ <List /> }></Route>
         }
       </Routes>
     </div>
