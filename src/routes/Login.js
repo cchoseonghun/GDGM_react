@@ -35,8 +35,8 @@ function Login(){
 
     function loginFn(){
         // axios.post('/login', {
-        axios.post('http://192.168.219.103:8080/login', {
-        // axios.post('http://localhost:8080/login', {
+        // axios.post('http://192.168.219.103:8080/login', {
+        axios.post('http://localhost:8080/login', {
             id: inputId, 
         }).then((result)=>{
             console.log(result.data.msg);

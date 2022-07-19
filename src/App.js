@@ -1,9 +1,7 @@
 /* eslint-disable */
 
-import logo from './logo.svg';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import axios from 'axios';
 import { Routes, Route, Link } from 'react-router-dom';
 import { lazy, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
