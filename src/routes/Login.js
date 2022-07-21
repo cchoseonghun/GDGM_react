@@ -13,6 +13,8 @@ function Login(){
 
     let [inputId, setInputId] = useState('');
 
+    
+
     return (
         <>
         <Container>
@@ -34,9 +36,8 @@ function Login(){
     )
 
     function loginFn(){
-        // axios.post('/login', {
-        // axios.post('http://192.168.219.103:8080/login', {
-        axios.post('http://localhost:8080/login', {
+        const server_address = process.env.REACT_APP_SERVER_ADDRESS;
+        axios.post(server_address + '/login', {
             id: inputId, 
         }).then((result)=>{
             console.log(result.data.msg);

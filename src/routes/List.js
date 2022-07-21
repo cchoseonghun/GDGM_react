@@ -26,9 +26,8 @@ function List(){
 
     function getList(){
         let session_user = JSON.parse(localStorage.getItem('session_user'));
-
-        // axios.get('http://192.168.219.103:8080/list', {
-        axios.get('http://localhost:8080/list', {
+        const server_address = process.env.REACT_APP_SERVER_ADDRESS;
+        axios.get(server_address + '/list', {
             params: { _id: session_user._id,  }
         }).then((result)=>{
             setList(result.data);
