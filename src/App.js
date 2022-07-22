@@ -8,7 +8,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setUser } from './store/userSlice';
 
 import Login from './routes/Login.js';
-import List from './routes/List.js';
+import Groups from './routes/Groups.js';
+import Raid from './routes/Raid.js';
 // const Login = lazy(() => import('./routes/Login.js'));
 // const List = lazy(() => import('./routes/List.js'));
 
@@ -28,8 +29,9 @@ function App() {
         {
           state.user.isLogined === 0 ?
           <Route path='/' element={ <Login /> }></Route> : 
-          <Route path='/' element={ <List /> }></Route>
+          <Route path='/' element={ <Groups /> }></Route>
         }
+        <Route path='/raid' element={ <Raid /> }></Route>
       </Routes>
     </div>
   );

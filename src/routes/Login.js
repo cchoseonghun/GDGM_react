@@ -13,8 +13,6 @@ function Login(){
 
     let [inputId, setInputId] = useState('');
 
-    
-
     return (
         <>
         <Container>
