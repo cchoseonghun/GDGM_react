@@ -2,10 +2,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setShow } from '../../store/modalSlice';
 import { Form, Button, Modal } from 'react-bootstrap';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 function AddRaidModal(){
     let state = useSelector((state)=> state );
     let dispatch = useDispatch();
+    let navigate = useNavigate();
 
     const handleClose = () => dispatch(setShow(false));
 
@@ -40,7 +42,7 @@ function AddRaidModal(){
     )
 
     function addRaid(){
-        let session_user = localStorage.getItem('session_user');
+        let session_user = JSON.parse(localStorage.getItem('session_user'));
 
         const server_address = process.env.REACT_APP_SERVER_ADDRESS;
         axios.post(server_address + '/raid', {
@@ -49,10 +51,13 @@ function AddRaidModal(){
             d_time: document.querySelector('input[name="d_time"]').value, 
             group_id: state.group._id, 
             group_name: state.group.name, 
-            // master_id: session_user._id;
-            // master_name: session_user.name;
+            master_id: session_user._id, 
+            master_name: session_user.name, 
         }).then((result)=>{
-            console.log(result.data);
+            console.log(result.data.msg);
+            if(result.data.code > 0){
+                navigate('/raid');
+            }
         })
     }
 }

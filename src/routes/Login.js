@@ -11,7 +11,7 @@ function Login(){
     let dispatch = useDispatch();
     let navigate = useNavigate();
 
-    let [inputId, setInputId] = useState('');
+    let [inputName, setInputName] = useState('');
 
     return (
         <>
@@ -19,11 +19,11 @@ function Login(){
             <h1 onClick={()=>{navigate('/')}} className="mt-5">공대공머</h1>
             <InputGroup className="mb-3 mt-5">
                 <Form.Control
-                placeholder="닉네임 입력"
+                placeholder="이름 입력"
                 aria-label="Recipient's username"
                 aria-describedby="basic-addon2"
-                name="id"
-                onChange={(e)=>{ setInputId(e.target.value) }}
+                name="name"
+                onChange={(e)=>{ setInputName(e.target.value) }}
                 />
             <Button variant="outline-primary" id="button-addon2" onClick={()=>{ loginFn() }}>
             시작
@@ -36,7 +36,7 @@ function Login(){
     function loginFn(){
         const server_address = process.env.REACT_APP_SERVER_ADDRESS;
         axios.post(server_address + '/login', {
-            id: inputId, 
+            name: inputName, 
         }).then((result)=>{
             console.log(result.data.msg);
             if(parseInt(result.data.code) > 0){

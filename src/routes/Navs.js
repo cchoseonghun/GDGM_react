@@ -19,7 +19,7 @@ function Navs(){
             <Container>
                 <Navbar.Brand onClick={()=>{navigate('/')}}>공대공머</Navbar.Brand>
                 <Navbar.Text>
-                접속id: <a href="#login">{session_user.id}</a>
+                접속id: <a href="#login">{session_user.name}</a>
                 </Navbar.Text>
                 <Navbar.Toggle />
                 <Navbar.Collapse className="justify-content-end">

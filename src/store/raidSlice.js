@@ -4,12 +4,12 @@ let raid = createSlice({
     name: 'raid', 
     initialState: {
         _id: '', 
-        title: '' 
+        name: '' 
     }, 
     reducers: {
         setRaid(state, action){
             state._id = action.payload._id;
-            state.title = action.payload.title;
+            state.name = action.payload.name;
         }
     }
 })
