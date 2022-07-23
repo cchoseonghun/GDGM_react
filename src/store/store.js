@@ -3,6 +3,7 @@ import user from './userSlice'
 import nav from './navSlice'
 import raid from './raidSlice'
 import modal from './modalSlice'
+import group from './groupSlice'
 
 export default configureStore({
     reducer: {
@@ -10,5 +11,6 @@ export default configureStore({
         nav: nav.reducer, 
         raid: raid.reducer, 
         modal: modal.reducer, 
+        group: group.reducer, 
     }
 })

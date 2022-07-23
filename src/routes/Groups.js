@@ -4,7 +4,7 @@ import { Container, Badge } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { setType } from '../store/navSlice';
-import { setRaid } from '../store/raidSlice';
+import { setGroup } from '../store/groupSlice';
 
 import Navs from './Navs.js';
 
@@ -33,9 +33,9 @@ function Groups(){
         </>
     )
 
-    function selectGroup(_id, title){
-        let raid = {_id: _id, title: title};
-        dispatch(setRaid(raid));
+    function selectGroup(_id, name){
+        let group = {_id: _id, name: name};
+        dispatch(setGroup(group));
         navigate('/raid')
     }
 

@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { setShow } from '../../store/modalSlice';
 import { Form, Button, Modal } from 'react-bootstrap';
+import axios from 'axios';
 
 function AddRaidModal(){
     let state = useSelector((state)=> state );
@@ -10,10 +11,8 @@ function AddRaidModal(){
 
     return (
         <Modal 
-            size="sm" 
             show={state.modal.show} 
             onHide={handleClose}
-            aria-labelledby="example-modal-sizes-title-sm"
         >
             <Modal.Header closeButton>
                 <Modal.Title>레이드 추가</Modal.Title>
@@ -21,8 +20,12 @@ function AddRaidModal(){
             <Modal.Body>
                 <Form>
                     <Form.Group className="mb-3">
-                        <Form.Label>레이드 추가 폼 만들어야함</Form.Label>
-                        <Form.Control id="code" type="text" autoFocus />
+                        <Form.Label>레이드 이름</Form.Label>
+                        <Form.Control id="raid_name" name="raid_name" type="text" autoFocus />
+                        <Form.Label>디데이_날짜</Form.Label>
+                        <Form.Control id="d_date" name="d_date" type="date" autoFocus />
+                        <Form.Label>디데이_시간</Form.Label>
+                        <Form.Control id="d_time" name="d_time" type="time" autoFocus />
                     </Form.Group>
                 </Form>
             </Modal.Body>
@@ -37,8 +40,20 @@ function AddRaidModal(){
     )
 
     function addRaid(){
-        let code = document.querySelector('#code').value;
-        console.log('code: ' + code);
+        let session_user = localStorage.getItem('session_user');
+
+        const server_address = process.env.REACT_APP_SERVER_ADDRESS;
+        axios.post(server_address + '/raid', {
+            raid_name: document.querySelector('input[name="raid_name"]').value, 
+            d_date: document.querySelector('input[name="d_date"]').value, 
+            d_time: document.querySelector('input[name="d_time"]').value, 
+            group_id: state.group._id, 
+            group_name: state.group.name, 
+            // master_id: session_user._id;
+            // master_name: session_user.name;
+        }).then((result)=>{
+            console.log(result.data);
+        })
     }
 }
 
