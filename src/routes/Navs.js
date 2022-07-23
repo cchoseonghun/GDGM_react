@@ -21,6 +21,7 @@ function Navs(){
                 <Navbar.Text>
                 접속id: <a href="#login">{session_user.name}</a>
                 </Navbar.Text>
+                <Button className="ms-5" onClick={()=>{navigate(-1)}} variant="outline-dark" >뒤로</Button>
                 <Navbar.Toggle />
                 <Navbar.Collapse className="justify-content-end">
                 {
