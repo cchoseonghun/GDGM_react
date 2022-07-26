@@ -1,12 +1,11 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { Container, Badge } from 'react-bootstrap';
+import { Container, Badge, Button } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { setType } from '../store/navSlice';
 import { setGroup } from '../store/groupSlice';
-
-import Navs from './Navs.js';
+import { setModalName, setShow } from '../store/modalSlice';
+import AddGroupModal from './modals/AddGroupModal';
 
 function Groups(){
     let state = useSelector((state)=> state );
@@ -16,22 +15,27 @@ function Groups(){
     let [list, setList] = useState( [] );
 
     useEffect(()=>{
-        dispatch(setType('default'));
         getGroups();
     }, [])
 
     return (
         <>
-        <Navs />
         <Container className="mt-5">
+            <Button onClick={()=>{showModal('addGroup')}} variant="outline-primary" >공대추가</Button>
             {
                 list.length > 0 ?
                 list.map( (a, i) => <h1 key={i}><Badge bg="success" onClick={()=>{selectGroup(a._id, a.name)}}>{a.name}</Badge></h1> ) : 
                 <h1>가입된 공격대가 없습니다.</h1>
             }
         </Container>
+        { state.modal.modalName == 'addGroup' && <AddGroupModal /> }
         </>
     )
+
+    function showModal(modalName){
+        dispatch(setModalName(modalName));
+        dispatch(setShow(true));
+    }
 
     function selectGroup(_id, name){
         let group = {_id: _id, name: name};

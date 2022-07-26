@@ -20,14 +20,10 @@ function Login(){
             <InputGroup className="mb-3 mt-5">
                 <Form.Control
                 placeholder="이름 입력"
-                aria-label="Recipient's username"
-                aria-describedby="basic-addon2"
                 name="name"
                 onChange={(e)=>{ setInputName(e.target.value) }}
                 />
-            <Button variant="outline-primary" id="button-addon2" onClick={()=>{ loginFn() }}>
-            시작
-            </Button>
+            <Button variant="outline-primary" id="button-addon2" onClick={()=>{ loginFn() }}>시작</Button>
             </InputGroup>
         </Container>
         </>

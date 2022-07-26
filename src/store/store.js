@@ -5,7 +5,6 @@ import { persistReducer } from 'redux-persist';
 import thunk from 'redux-thunk';
 
 import user from './userSlice'
-import nav from './navSlice'
 import raid from './raidSlice'
 import modal from './modalSlice'
 import group from './groupSlice'
@@ -22,7 +21,6 @@ import group from './groupSlice'
 
 const reducers = combineReducers({
     user: user.reducer, 
-    nav: nav.reducer, 
     raid: raid.reducer, 
     modal: modal.reducer, 
     group: group.reducer, 
@@ -31,7 +29,7 @@ const reducers = combineReducers({
 const persistConfig = {
     key: 'root', 
     storage: storage, 
-    // blacklist: [ 'group' ], 유지시키지 않을 리스트
+    blacklist: [ 'raid' ], //유지시키지 않을 리스트
     // whitelist: [ 'group' ], 
 };
 

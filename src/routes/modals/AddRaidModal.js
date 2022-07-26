@@ -23,7 +23,7 @@ function AddRaidModal(){
                 <Form>
                     <Form.Group className="mb-3">
                         <Form.Label>레이드 이름</Form.Label>
-                        <Form.Control id="raid_name" name="raid_name" type="text" autoFocus />
+                        <Form.Control id="name" name="name" type="text" autoFocus />
                         <Form.Label>디데이_날짜</Form.Label>
                         <Form.Control id="d_date" name="d_date" type="date" autoFocus />
                         <Form.Label>디데이_시간</Form.Label>
@@ -46,7 +46,7 @@ function AddRaidModal(){
 
         const server_address = process.env.REACT_APP_SERVER_ADDRESS;
         axios.post(server_address + '/raid', {
-            raid_name: document.querySelector('input[name="raid_name"]').value, 
+            name: document.querySelector('input[name="name"]').value, 
             d_date: document.querySelector('input[name="d_date"]').value, 
             d_time: document.querySelector('input[name="d_time"]').value, 
             group_id: state.group._id, 
@@ -56,7 +56,7 @@ function AddRaidModal(){
         }).then((result)=>{
             console.log(result.data.msg);
             if(result.data.code > 0){
-                navigate('/raid');
+                console.log('레이드추가완료');
             }
         })
     }

@@ -10,6 +10,8 @@ import { setUser } from './store/userSlice';
 import Login from './routes/Login.js';
 import Groups from './routes/Groups.js';
 import Raid from './routes/Raid.js';
+import Navs from './routes/Navs.js';
+
 // const Login = lazy(() => import('./routes/Login.js'));
 // const List = lazy(() => import('./routes/List.js'));
 
@@ -25,6 +27,7 @@ function App() {
 
   return (
     <div className="App">
+      { state.user.isLogined === 1 && <Navs /> }
       <Routes>
         {
           state.user.isLogined === 0 ?
