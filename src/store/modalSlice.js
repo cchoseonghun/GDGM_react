@@ -5,6 +5,7 @@ let modal = createSlice({
     initialState: {
         modalName: '', 
         show: false, 
+        raid_id: '', 
     }, 
     reducers: {
         setModalName(state, action){
@@ -12,9 +13,12 @@ let modal = createSlice({
         }, 
         setShow(state, action){
             state.show = action.payload;
-        }
+        }, 
+        setRaid_id(state, action){
+            state.raid_id = action.payload;
+        }, 
     }
 })
-export let { setModalName, setShow } = modal.actions
+export let { setModalName, setShow, setRaid_id } = modal.actions
 
 export default modal

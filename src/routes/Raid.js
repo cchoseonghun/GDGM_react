@@ -2,10 +2,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { Container, Carousel, Card, Button, Dropdown, DropdownButton, Badge } from 'react-bootstrap';
 import axios from 'axios';
-import { setModalName, setShow } from '../store/modalSlice';
+import { setModalName, setShow, setRaid_id } from '../store/modalSlice';
 import AddRaidModal from './modals/AddRaidModal';
 import RaidMemberModal from './modals/RaidMemberModal';
 import { useNavigate } from 'react-router-dom';
+import { setRaid } from '../store/raidSlice';
 
 function Raid(){
     let state = useSelector((state)=> state );
@@ -13,7 +14,7 @@ function Raid(){
     let navigate = useNavigate();
 
     const [index, setIndex] = useState(0);
-    const [list, setList] = useState( [] );
+    // const [list, setList] = useState( [] );
 
     const handleSelect = (selectedIndex, e) => {
       setIndex(selectedIndex);
@@ -32,10 +33,10 @@ function Raid(){
                 <Button className="ms-1" onClick={()=>{showModal('AddRaid')}} variant="outline-primary" >레이드추가</Button>
             </div>
             {
-                list.length > 0 ?
+                state.raid.data.length > 0 ?
                 <Carousel activeIndex={index} onSelect={handleSelect} variant="dark" interval={null} indicators={true}>
                 {
-                    list.map((a, i)=>{
+                    state.raid.data.map((a, i)=>{
                         return(
                             <Carousel.Item key={i}>
                             <Card className="text-center">
@@ -45,7 +46,10 @@ function Raid(){
                                         <Dropdown.Item onClick={()=>{deleteRaid(a._id)}}>레이드삭제</Dropdown.Item>
                                     </DropdownButton>
                                 </Card.Title>
-                                <Button onClick={()=>{showModal('RaidMember')}} variant="warning">2/{a.members.length}</Button>
+                                <Button onClick={()=>{
+                                    showModal('RaidMember');
+                                    dispatch(setRaid_id(a._id));
+                                    }} variant="warning">2/{a.members.length}</Button>
                                 <Card.Text>{a.d_date} {a.d_time} {getDday(a.d_date)}</Card.Text>
                                 <Button variant="outline-success">수락</Button>
                                 <Button variant="outline-danger">거절</Button>
@@ -92,10 +96,11 @@ function Raid(){
     function getRaids(){
         let group_id = state.group._id;
         const server_address = process.env.REACT_APP_SERVER_ADDRESS;
-        axios.get(server_address + '/raid', {
+        axios.get(server_address + '/raids', {
             params: { group_id: group_id }
         }).then((result)=>{
-            setList(result.data);
+            // setList(result.data);
+            dispatch(setRaid(result.data));
         })
     }
 

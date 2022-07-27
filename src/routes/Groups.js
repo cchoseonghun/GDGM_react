@@ -26,7 +26,7 @@ function Groups(){
                 list.length > 0 ?
                 list.map( (a, i) => 
                     <h1 key={i}>
-                        <Badge bg="success" onClick={()=>{selectGroup(a._id, a.name)}}>{a.name}</Badge>
+                        <Badge bg="success" onClick={()=>{selectGroup(a._id, a.name, a.members)}}>{a.name}</Badge>
                         <Button className="ms-1" onClick={()=>{showModal('GroupSetting')}} variant="outline-info" >세팅</Button>
                         <Button className="ms-1" onClick={()=>{showModal('GroupMember')}} variant="outline-success" >멤버</Button>
                     </h1> 
@@ -43,10 +43,10 @@ function Groups(){
         dispatch(setShow(true));
     }
 
-    function selectGroup(_id, name){
-        let group = {_id: _id, name: name};
+    function selectGroup(_id, name, members){
+        let group = {_id: _id, name: name, members: members};
         dispatch(setGroup(group));
-        navigate('/raid')
+        navigate('/raid');
     }
 
     function getGroups(){
