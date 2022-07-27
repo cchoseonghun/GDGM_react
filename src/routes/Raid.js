@@ -4,6 +4,7 @@ import { Container, Carousel, Card, Button, Dropdown, DropdownButton, Badge } fr
 import axios from 'axios';
 import { setModalName, setShow } from '../store/modalSlice';
 import AddRaidModal from './modals/AddRaidModal';
+import RaidMemberModal from './modals/RaidMemberModal';
 import { useNavigate } from 'react-router-dom';
 
 function Raid(){
@@ -25,12 +26,10 @@ function Raid(){
     return (
         <>
         <Container className="mt-5">
-            <Button onClick={()=>{navigate(-1)}} variant="outline-dark" >뒤로</Button>
             <h1>{state.group.name}</h1>
             <div className="btn-group mb-2">
-                <Button className="ms-1" onClick={()=>{showModal('addRaid')}} variant="outline-primary" >NEW</Button>
-                <Button className="ms-1" onClick={()=>{showModal('raidSetting')}} variant="outline-info" >세팅</Button>
-                <Button className="ms-1" onClick={()=>{showModal('raidMember')}} variant="outline-success" >멤버</Button>
+                <Button onClick={()=>{navigate(-1)}} variant="outline-dark" >뒤로</Button>
+                <Button className="ms-1" onClick={()=>{showModal('AddRaid')}} variant="outline-primary" >레이드추가</Button>
             </div>
             {
                 list.length > 0 ?
@@ -43,11 +42,10 @@ function Raid(){
                             <Card.Body>
                                 <Card.Title>
                                     <DropdownButton id="dropdown-basic-button" title={a.name}>
-                                        <Dropdown.Item onClick={()=>{showRaidMember(a.members)}}>레이드멤버</Dropdown.Item>
                                         <Dropdown.Item onClick={()=>{deleteRaid(a._id)}}>레이드삭제</Dropdown.Item>
                                     </DropdownButton>
                                 </Card.Title>
-                                <Button variant="warning">2/{a.members.length}</Button>
+                                <Button onClick={()=>{showModal('RaidMember')}} variant="warning">2/{a.members.length}</Button>
                                 <Card.Text>{a.d_date} {a.d_time} {getDday(a.d_date)}</Card.Text>
                                 <Button variant="outline-success">수락</Button>
                                 <Button variant="outline-danger">거절</Button>
@@ -62,17 +60,14 @@ function Raid(){
                 <h2>등록된 레이드가 없습니다.</h2>
             }
         </Container>
-        { state.modal.modalName == 'addRaid' && <AddRaidModal /> }
+        { state.modal.modalName == 'AddRaid' && <AddRaidModal getRaids={getRaids} /> }
+        { state.modal.modalName == 'RaidMember' && <RaidMemberModal /> }
         </>
     )
 
     function showModal(modalName){
         dispatch(setModalName(modalName));
         dispatch(setShow(true));
-    }
-
-    function showRaidMember(a){
-        console.log(a);
     }
 
     function deleteRaid(raid_id){
@@ -103,6 +98,7 @@ function Raid(){
             setList(result.data);
         })
     }
+
 }
 
 export default Raid

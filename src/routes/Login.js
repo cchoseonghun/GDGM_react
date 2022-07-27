@@ -19,7 +19,7 @@ function Login(){
             <h1 onClick={()=>{navigate('/')}} className="mt-5">공대공머</h1>
             <InputGroup className="mb-3 mt-5">
                 <Form.Control
-                placeholder="이름 입력"
+                placeholder="이름입력"
                 name="name"
                 onChange={(e)=>{ setInputName(e.target.value) }}
                 />

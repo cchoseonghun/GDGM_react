@@ -4,7 +4,7 @@ import { Form, Button, Modal } from 'react-bootstrap';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-function AddRaidModal(){
+function AddRaidModal(props){
     let state = useSelector((state)=> state );
     let dispatch = useDispatch();
     let navigate = useNavigate();
@@ -56,7 +56,7 @@ function AddRaidModal(){
         }).then((result)=>{
             console.log(result.data.msg);
             if(result.data.code > 0){
-                console.log('레이드추가완료');
+                props.getRaids();
             }
         })
     }

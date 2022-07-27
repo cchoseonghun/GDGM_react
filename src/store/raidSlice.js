@@ -3,16 +3,14 @@ import { configureStore, createSlice } from "@reduxjs/toolkit";
 let raid = createSlice({
     name: 'raid', 
     initialState: {
-        _id: '', 
-        name: '' 
+        members: {}, 
     }, 
     reducers: {
-        setRaid(state, action){
-            state._id = action.payload._id;
-            state.name = action.payload.name;
+        setRaidMember(state, action){
+            state.members = action.payload;
         }
     }
 })
-export let { setRaid } = raid.actions
+export let { setRaidMember } = raid.actions
 
 export default raid

@@ -24,7 +24,13 @@ function Groups(){
             <Button onClick={()=>{showModal('addGroup')}} variant="outline-primary" >공대추가</Button>
             {
                 list.length > 0 ?
-                list.map( (a, i) => <h1 key={i}><Badge bg="success" onClick={()=>{selectGroup(a._id, a.name)}}>{a.name}</Badge></h1> ) : 
+                list.map( (a, i) => 
+                    <h1 key={i}>
+                        <Badge bg="success" onClick={()=>{selectGroup(a._id, a.name)}}>{a.name}</Badge>
+                        <Button className="ms-1" onClick={()=>{showModal('GroupSetting')}} variant="outline-info" >세팅</Button>
+                        <Button className="ms-1" onClick={()=>{showModal('GroupMember')}} variant="outline-success" >멤버</Button>
+                    </h1> 
+                    ) : 
                 <h1>가입된 공격대가 없습니다.</h1>
             }
         </Container>
