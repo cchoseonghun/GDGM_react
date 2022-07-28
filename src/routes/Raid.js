@@ -50,9 +50,8 @@ function Raid(){
                                     showModal('RaidMember');
                                     dispatch(setRaid_id(a._id));
                                     }} variant="warning">2/{a.members.length}</Button>
-                                <Card.Text>{a.d_date} {a.d_time} {getDday(a.d_date)}</Card.Text>
-                                <Button variant="outline-success">수락</Button>
-                                <Button variant="outline-danger">거절</Button>
+                                <Card.Text>{a.d_date} {a.d_time} {getDdayTag(a.d_date)}</Card.Text>
+                                {getBtn(a.members, a.d_date, a._id)}
                                 <div className="mb-5"></div>
                             </Card.Body>
                             </Card>
@@ -69,6 +68,58 @@ function Raid(){
         </>
     )
 
+    function getBtn(members, targetDate, _id){
+        let status = members.find( x => x._id == JSON.parse(localStorage.getItem('session_user'))._id).status;
+        let dDay = calDday(targetDate);  // 0: D-Day, <0: 날짜지남, >0: D-?
+
+        if(dDay < 0){
+            return (<div><Button variant="secondary" disabled>날짜지남</Button></div>)
+        } else {
+            if(status === 'default'){
+                return (
+                    <>
+                    <div><Button onClick={()=>{changeStatus(_id, 'checked')}} variant="outline-warning">일정확인</Button></div>
+                    <div><Button onClick={()=>{changeStatus(_id, 'refused')}} variant="outline-danger">참여불가</Button></div>
+                    </>
+                )
+            } else if(status === 'checked'){
+                if(dDay == 0){
+                    return (
+                        <>
+                        <div><Button onClick={()=>{changeStatus(_id, 'standby')}} variant="outline-success">대기확인</Button></div>
+                        <div><Button onClick={()=>{changeStatus(_id, 'refused')}} variant="outline-danger">참여불가</Button></div>
+                        </>
+                    )
+                } else {
+                    <div><Button onClick={()=>{changeStatus(_id, 'default')}} variant="outline-secondary">선택취소</Button></div>
+                }
+            } else if(status === 'standby'){
+                return (
+                    <div><Button onClick={()=>{changeStatus(_id, 'checked')}} variant="outline-secondary">선택취소</Button></div>
+                )
+            } else if(status === 'refused'){
+                return (
+                    <div><Button onClick={()=>{changeStatus(_id, 'default')}} variant="outline-secondary">선택취소</Button></div>
+                )
+            }
+        }
+    }
+
+    function changeStatus(raid_id, target_status){
+        let user_id = JSON.parse(localStorage.getItem('session_user'))._id;
+        // raid_id, user_id, target_status 로 유저 상태변경하는 ajax
+        const server_address = process.env.REACT_APP_SERVER_ADDRESS;
+        axios.put(server_address + '/raid/member/status', {
+            raid_id: raid_id, 
+            user_id: user_id, 
+            target_status: target_status, 
+        }).then((result)=>{
+            console.log(result.data.msg);
+            // 소속, 대기 명단 최신화.. 랑 modal 닫았을 때 인원버튼, status 최신화
+            // 버튼은 됐나?
+        })
+    }
+
     function showModal(modalName){
         dispatch(setModalName(modalName));
         dispatch(setShow(true));
@@ -79,11 +130,16 @@ function Raid(){
         alert('추후지원예정');
     }
 
-    function getDday(targetDate){
+    function calDday(targetDate){
         let dday = new Date(targetDate);
         let today = new Date();
         let gap = dday.getTime() - today.getTime();
         let result = Math.ceil(gap / (1000 * 60 * 60 * 24));
+        return result;
+    }
+
+    function getDdayTag(targetDate){
+        let result = calDday(targetDate);
         if(result == 0) {
             return (<Badge bg="danger">D-DAY</Badge>);
         } else if(result > 0){

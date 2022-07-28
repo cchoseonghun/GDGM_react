@@ -9,8 +9,11 @@ function RaidMemberModal(){
     let state = useSelector((state)=> state );
     let dispatch = useDispatch();
 
+    const server_address = process.env.REACT_APP_SERVER_ADDRESS;
+
     const handleClose = () => dispatch(setShow(false));
     let [raidMembers, setRaidMembers] = useState([]);
+    let [selected, setSelected] = useState( {} );
 
     useEffect(()=>{
         getRaidMembers();
@@ -44,7 +47,7 @@ function RaidMemberModal(){
                             </ListGroup>
                         </Tab.Pane>
                         <Tab.Pane eventKey="#link2">
-                            <Button variant="success">추가</Button>
+                            <Button onClick={addRaidMember} variant="success">추가</Button>
                             {/* <InputGroup className="mt-2">
                                 <Form.Control
                                 placeholder="이름검색"
@@ -59,7 +62,20 @@ function RaidMemberModal(){
                                             return false;
                                         } else {
                                             return ( 
-                                                <ListGroup.Item key={i} action variant="light">{a.name}</ListGroup.Item>
+                                                <ListGroup.Item 
+                                                    key={i} 
+                                                    onClick={(e)=>{
+                                                         setSelected({
+                                                            user_id: e.target.dataset.id, 
+                                                            user_name: e.target.innerHTML, 
+                                                         })
+                                                        }} 
+                                                    action 
+                                                    variant="light"
+                                                    data-id={a._id}
+                                                >
+                                                {a.name}
+                                                </ListGroup.Item>
                                             )
                                         }
                                     }) 
@@ -72,9 +88,21 @@ function RaidMemberModal(){
         </Modal>
     )
 
+    function addRaidMember(){
+        // 오류로 리스트에 레이드에 이미 속한 멤버도 들어갈 수 있는 현상이 발견. 예외처리 해야할듯
+        axios.put(server_address + '/raid/member', {
+            raid_id: state.modal.raid_id, 
+            user_id: selected.user_id, 
+            user_name: selected.user_name, 
+        }).then((result)=>{
+            console.log('addRaidMember result: ');
+            console.log(result);
+        })
+
+    }
+
     function getRaidMembers(){
         let _id = state.modal.raid_id;
-        const server_address = process.env.REACT_APP_SERVER_ADDRESS;
         axios.get(server_address + '/raid', {
             params: { _id: _id }
         }).then((result)=>{
