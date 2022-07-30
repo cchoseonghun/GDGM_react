@@ -22,6 +22,8 @@ function Login(){
                 placeholder="이름입력"
                 name="name"
                 onChange={(e)=>{ setInputName(e.target.value) }}
+                aria-label="이름입력"
+                aria-describedby="basic-addon2"
                 />
             <Button variant="outline-primary" id="button-addon2" onClick={()=>{ loginFn() }}>시작</Button>
             </InputGroup>

@@ -5,6 +5,7 @@ import axios from 'axios';
 import { setModalName, setShow, setRaid_id } from '../store/modalSlice';
 import AddRaidModal from './modals/AddRaidModal';
 import RaidMemberModal from './modals/RaidMemberModal';
+import InviteCodeModal from './modals/InviteCodeModal';
 import { useNavigate } from 'react-router-dom';
 import { setRaid } from '../store/raidSlice';
 
@@ -29,7 +30,8 @@ function Raid(){
         <Container className="mt-5">
             <h1>{state.group.name}</h1>
             <div className="btn-group mb-2">
-                <Button onClick={()=>{navigate(-1)}} variant="outline-dark" >뒤로</Button>
+                <Button onClick={()=>{navigate('/')}} variant="outline-dark" >뒤로</Button>
+                <Button className="ms-1" onClick={()=>{showModal('InviteCode')}} variant="outline-success" >초대코드</Button>
                 <Button className="ms-1" onClick={()=>{showModal('AddRaid')}} variant="outline-primary" >레이드추가</Button>
             </div>
             {
@@ -65,6 +67,7 @@ function Raid(){
         </Container>
         { state.modal.modalName == 'AddRaid' && <AddRaidModal getRaids={getRaids} /> }
         { state.modal.modalName == 'RaidMember' && <RaidMemberModal /> }
+        { state.modal.modalName == 'InviteCode' && <InviteCodeModal /> }
         </>
     )
 

@@ -26,7 +26,8 @@ function Groups(){
                 list.length > 0 ?
                 list.map( (a, i) => 
                     <h1 key={i}>
-                        <Badge bg="success" onClick={()=>{selectGroup(a._id, a.name, a.members)}}>{a.name}</Badge>
+                        {/* <Badge bg="success" onClick={()=>{selectGroup(a._id, a.name, a.members)}}>{a.name}</Badge> */}
+                        <Button className="ms-1" onClick={()=>{selectGroup(a._id, a.name, a.members)}} variant="success" >{a.name}</Button>
                         <Button className="ms-1" onClick={()=>{showModal('GroupSetting')}} variant="outline-info" >세팅</Button>
                         <Button className="ms-1" onClick={()=>{showModal('GroupMember')}} variant="outline-success" >멤버</Button>
                     </h1> 
