@@ -97,6 +97,7 @@ function RaidMemberModal(){
         }).then((result)=>{
             console.log('addRaidMember result: ');
             console.log(result);
+        // 220801 작업해야하는곳 - 결과 받고 리액션 해야할듯?
         })
 
     }

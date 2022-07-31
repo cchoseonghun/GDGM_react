@@ -8,6 +8,7 @@ import user from './userSlice'
 import raid from './raidSlice'
 import modal from './modalSlice'
 import group from './groupSlice'
+import alert from './alertSlice'
 
 // export default configureStore({
 //     reducer: {
@@ -24,12 +25,16 @@ const reducers = combineReducers({
     raid: raid.reducer, 
     modal: modal.reducer, 
     group: group.reducer, 
+    alert: alert.reducer, 
 });
 
 const persistConfig = {
     key: 'root', 
     storage: storage, 
-    blacklist: [ 'raid' ], //유지시키지 않을 리스트
+    blacklist: [ 
+        'alert', 
+        'raid', 
+    ], //유지시키지 않을 리스트
     // whitelist: [ 'group' ], 
 };
 

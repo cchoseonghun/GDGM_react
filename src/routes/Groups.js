@@ -1,11 +1,12 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { Container, Badge, Button } from 'react-bootstrap';
+import { Container, Badge, Button, Alert } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { setGroup } from '../store/groupSlice';
 import { setModalName, setShow } from '../store/modalSlice';
 import AddGroupModal from './modals/AddGroupModal';
+import { setAlert } from '../store/alertSlice'
 
 function Groups(){
     let state = useSelector((state)=> state );
@@ -20,7 +21,14 @@ function Groups(){
 
     return (
         <>
+        { state.alert.switch && <Alert key={state.alert.variant} variant={state.alert.variant}>{state.alert.message}</Alert> }
         <Container className="mt-5">
+            <Button onClick={()=>{
+                dispatch(setAlert({switch: true, variant: 'primary', message: '테스트입니다'}));
+                setTimeout(()=>{
+                    dispatch(setAlert({switch: false, variant: '', message: ''}));
+                }, 10000)
+            }} variant="outline-primary" >alert테스트</Button>
             <Button onClick={()=>{showModal('addGroup')}} variant="outline-primary" >공대추가</Button>
             {
                 list.length > 0 ?

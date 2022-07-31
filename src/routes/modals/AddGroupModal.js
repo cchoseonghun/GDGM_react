@@ -1,12 +1,16 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { setShow } from '../../store/modalSlice';
 import { Form, Button, Modal, InputGroup} from 'react-bootstrap';
+import axios from 'axios';
+import { setAlert } from '../../store/alertSlice'
 
 function AddGroupModal(){
     let state = useSelector((state)=> state );
     let dispatch = useDispatch();
 
     const handleClose = () => dispatch(setShow(false));
+
+    const server_address = process.env.REACT_APP_SERVER_ADDRESS;
 
     return (
         <Modal 
@@ -40,7 +44,18 @@ function AddGroupModal(){
 
     function addGroup(){
         let code = document.querySelector('#code').value;
-        console.log('code: ' + code);
+        let session_user = JSON.parse(localStorage.getItem('session_user'));
+
+        axios.post(server_address + '/group/member', {
+            code: code, 
+            user_id: session_user._id, 
+            user_name: session_user.name, 
+        }).then((result)=>{
+            dispatch(setAlert({switch: true, variant: result.data.variant, message: result.data.message}));
+            setTimeout(()=>{
+                dispatch(setAlert({switch: false, variant: '', content: ''}));
+            }, 10000)
+        })
     }
 }
 

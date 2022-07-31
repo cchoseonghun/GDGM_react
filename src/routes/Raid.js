@@ -72,7 +72,8 @@ function Raid(){
     )
 
     function getBtn(members, targetDate, _id){
-        let status = members.find( x => x._id == JSON.parse(localStorage.getItem('session_user'))._id).status;
+        // 통신이슈인지 members를 못받아온 상태일때가 있어 optional chaining 연산자 사용 (?.)
+        let status = members.find( x => x._id == JSON.parse(localStorage.getItem('session_user'))._id)?.status;  
         let dDay = calDday(targetDate);  // 0: D-Day, <0: 날짜지남, >0: D-?
 
         if(dDay < 0){
@@ -154,9 +155,13 @@ function Raid(){
 
     function getRaids(){
         let group_id = state.group._id;
+        let session_user = JSON.parse(localStorage.getItem('session_user'));
         const server_address = process.env.REACT_APP_SERVER_ADDRESS;
         axios.get(server_address + '/raids', {
-            params: { group_id: group_id }
+            params: { 
+                group_id: group_id, 
+                user_id: session_user._id, 
+            }
         }).then((result)=>{
             // setList(result.data);
             dispatch(setRaid(result.data));
