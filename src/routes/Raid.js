@@ -60,10 +60,7 @@ function Raid(){
                                         <Button variant="primary">{a.name}</Button>
                                     }
                                 </Card.Title>
-                                <Button onClick={()=>{
-                                    showModal('RaidMember');
-                                    dispatch(setRaid_id(a._id));
-                                    }} variant="warning">2/{a.members.length}</Button>
+                                {getRaidStatusBtn(a)}
                                 <Card.Text>{a.d_date} {a.d_time} {getDdayTag(a.d_date)}</Card.Text>
                                 {getBtn(a.members, a.d_date, a._id)}
                                 <div className="mb-5"></div>
@@ -83,6 +80,38 @@ function Raid(){
         { state.modal.modalName == 'GroupMember' && <GroupMemberModal /> }
         </>
     )
+
+    function getRaidStatusBtn(a){
+        let variant = 'warning';
+        let content = '?/?';
+        let dDay = calDday(a.d_date);
+
+        if(a.members.filter(x => x.status == 'refused').length > 0){
+            variant = 'danger';
+            content = '진행불가';
+        } else if(a.members.filter(x => x.status == 'standby').length == a.members.length && dDay == 0){
+            variant = 'success';
+            content = a.members.filter(x => x.status == 'standby').length + '/' + a.members.length;
+        } else if(a.members.filter(x => x.status == 'standby').length > 0 && dDay == 0){
+            variant = 'outline-success';
+            content = a.members.filter(x => x.status == 'standby').length + '/' + a.members.length;
+        } else if(a.members.filter(x => x.status == 'checked').length == a.members.length && dDay == 0){
+            variant = 'outline-success';
+            content = a.members.filter(x => x.status == 'standby').length + '/' + a.members.length;
+        } else {
+            variant = 'warning';
+            content = a.members.filter(x => x.status == 'checked').length + '/' + a.members.length;
+        }
+
+        return (
+            <Button onClick={()=>{
+                showModal('RaidMember');
+                dispatch(setRaid_id(a._id));
+                }} variant={variant}>
+            {content}
+            </Button>
+        )
+    }
 
     function getBtn(members, targetDate, _id){
         // 통신이슈인지 members를 못받아온 상태일때가 있어 optional chaining 연산자 사용 (?.)
@@ -130,9 +159,10 @@ function Raid(){
             user_id: user_id, 
             target_status: target_status, 
         }).then((result)=>{
-            console.log(result.data.msg);
+            console.log(result);
             // 소속, 대기 명단 최신화.. 랑 modal 닫았을 때 인원버튼, status 최신화
             // 버튼은 됐나?
+            window.location.replace('/raid');
         })
     }
 
