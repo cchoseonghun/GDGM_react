@@ -23,27 +23,26 @@ function Groups(){
         <>
         { state.alert.switch && <Alert key={state.alert.variant} variant={state.alert.variant}>{state.alert.message}</Alert> }
         <Container className="mt-5">
-            <Button onClick={()=>{
+            {/* <Button onClick={()=>{
                 dispatch(setAlert({switch: true, variant: 'primary', message: '테스트입니다'}));
                 setTimeout(()=>{
                     dispatch(setAlert({switch: false, variant: '', message: ''}));
                 }, 10000)
-            }} variant="outline-primary" >alert테스트</Button>
-            <Button onClick={()=>{showModal('addGroup')}} variant="outline-primary" >공대추가</Button>
+            }} variant="outline-primary" >alert테스트</Button> */}
+            <Button onClick={()=>{showModal('AddGroup')}} variant="outline-primary" >공대추가</Button>
             {
                 list.length > 0 ?
                 list.map( (a, i) => 
                     <h1 key={i}>
                         {/* <Badge bg="success" onClick={()=>{selectGroup(a._id, a.name, a.members)}}>{a.name}</Badge> */}
                         <Button className="ms-1" onClick={()=>{selectGroup(a._id, a.name, a.members)}} variant="success" >{a.name}</Button>
-                        <Button className="ms-1" onClick={()=>{showModal('GroupSetting')}} variant="outline-info" >세팅</Button>
-                        <Button className="ms-1" onClick={()=>{showModal('GroupMember')}} variant="outline-success" >멤버</Button>
+                        {/* <Button className="ms-1" onClick={()=>{showModal('GroupSetting')}} variant="outline-info" >세팅</Button> */}
                     </h1> 
                     ) : 
                 <h1>가입된 공격대가 없습니다.</h1>
             }
         </Container>
-        { state.modal.modalName == 'addGroup' && <AddGroupModal /> }
+        { state.modal.modalName == 'AddGroup' && <AddGroupModal /> }
         </>
     )
 

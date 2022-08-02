@@ -1,21 +1,25 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
-import { Container, Carousel, Card, Button, Dropdown, DropdownButton, Badge } from 'react-bootstrap';
+import { Container, Carousel, Card, Button, Dropdown, DropdownButton, Badge, Alert } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { setModalName, setShow, setRaid_id } from '../store/modalSlice';
+
 import AddRaidModal from './modals/AddRaidModal';
 import RaidMemberModal from './modals/RaidMemberModal';
 import InviteCodeModal from './modals/InviteCodeModal';
-import { useNavigate } from 'react-router-dom';
+import GroupMemberModal from './modals/GroupMemberModal';
+
+import { setAlert } from '../store/alertSlice'
 import { setRaid } from '../store/raidSlice';
+import { setModalName, setShow, setRaid_id } from '../store/modalSlice';
 
 function Raid(){
     let state = useSelector((state)=> state );
     let dispatch = useDispatch();
     let navigate = useNavigate();
 
+    const server_address = process.env.REACT_APP_SERVER_ADDRESS;
     const [index, setIndex] = useState(0);
-    // const [list, setList] = useState( [] );
 
     const handleSelect = (selectedIndex, e) => {
       setIndex(selectedIndex);
@@ -27,11 +31,13 @@ function Raid(){
 
     return (
         <>
+        { state.alert.switch && <Alert key={state.alert.variant} variant={state.alert.variant}>{state.alert.message}</Alert> }
         <Container className="mt-5">
             <h1>{state.group.name}</h1>
             <div className="btn-group mb-2">
                 <Button onClick={()=>{navigate('/')}} variant="outline-dark" >뒤로</Button>
                 <Button className="ms-1" onClick={()=>{showModal('InviteCode')}} variant="outline-success" >초대코드</Button>
+                <Button className="ms-1" onClick={()=>{showModal('GroupMember')}} variant="outline-success" >멤버</Button>
                 <Button className="ms-1" onClick={()=>{showModal('AddRaid')}} variant="outline-primary" >레이드추가</Button>
             </div>
             {
@@ -44,9 +50,15 @@ function Raid(){
                             <Card className="text-center">
                             <Card.Body>
                                 <Card.Title>
-                                    <DropdownButton id="dropdown-basic-button" title={a.name}>
-                                        <Dropdown.Item onClick={()=>{deleteRaid(a._id)}}>레이드삭제</Dropdown.Item>
-                                    </DropdownButton>
+                                    {
+                                        a.members.find(x => x.rank == 'master')._id == JSON.parse(localStorage.getItem('session_user'))._id ?
+                                        <>
+                                        <DropdownButton id="dropdown-basic-button" title={a.name}>
+                                            <Dropdown.Item onClick={()=>{deleteRaid(a._id)}}>레이드삭제</Dropdown.Item>
+                                        </DropdownButton>
+                                        </> : 
+                                        <Button variant="primary">{a.name}</Button>
+                                    }
                                 </Card.Title>
                                 <Button onClick={()=>{
                                     showModal('RaidMember');
@@ -68,6 +80,7 @@ function Raid(){
         { state.modal.modalName == 'AddRaid' && <AddRaidModal getRaids={getRaids} /> }
         { state.modal.modalName == 'RaidMember' && <RaidMemberModal /> }
         { state.modal.modalName == 'InviteCode' && <InviteCodeModal /> }
+        { state.modal.modalName == 'GroupMember' && <GroupMemberModal /> }
         </>
     )
 
@@ -112,7 +125,6 @@ function Raid(){
     function changeStatus(raid_id, target_status){
         let user_id = JSON.parse(localStorage.getItem('session_user'))._id;
         // raid_id, user_id, target_status 로 유저 상태변경하는 ajax
-        const server_address = process.env.REACT_APP_SERVER_ADDRESS;
         axios.put(server_address + '/raid/member/status', {
             raid_id: raid_id, 
             user_id: user_id, 
@@ -130,8 +142,18 @@ function Raid(){
     }
 
     function deleteRaid(raid_id){
-        console.log('raid_id: ' + raid_id);
-        alert('추후지원예정');
+        axios.delete(server_address + '/raid', {
+            data: {
+                raid_id: raid_id, 
+                user_id: JSON.parse(localStorage.getItem('session_user'))._id, 
+            }
+        }).then((result)=>{
+            dispatch(setAlert({switch: true, variant: result.data.variant, message: result.data.message}));
+            setTimeout(()=>{
+                dispatch(setAlert({switch: false, variant: '', content: ''}));
+            }, 10000);
+            window.location.replace('/raid');
+        })
     }
 
     function calDday(targetDate){
@@ -156,7 +178,6 @@ function Raid(){
     function getRaids(){
         let group_id = state.group._id;
         let session_user = JSON.parse(localStorage.getItem('session_user'));
-        const server_address = process.env.REACT_APP_SERVER_ADDRESS;
         axios.get(server_address + '/raids', {
             params: { 
                 group_id: group_id, 
