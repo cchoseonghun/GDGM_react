@@ -11,6 +11,7 @@ function AddGroupModal(){
     const handleClose = () => dispatch(setShow(false));
 
     const server_address = process.env.REACT_APP_SERVER_ADDRESS;
+    let session_user = JSON.parse(localStorage.getItem('session_user'));
 
     return (
         <Modal 
@@ -44,8 +45,6 @@ function AddGroupModal(){
 
     function addGroup(){
         let code = document.querySelector('#code').value;
-        let session_user = JSON.parse(localStorage.getItem('session_user'));
-
         axios.post(server_address + '/group/member', {
             code: code, 
             user_id: session_user._id, 

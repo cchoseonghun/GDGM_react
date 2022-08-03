@@ -1,8 +1,11 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { ListGroup, Modal, Tab, Button, InputGroup, Form } from 'react-bootstrap';
-import { setShow } from '../../store/modalSlice';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+
+import { setShow } from '../../store/modalSlice';
+import { setAlert } from '../../store/alertSlice'
+
 
 
 function RaidMemberModal(){
@@ -38,7 +41,7 @@ function RaidMemberModal(){
                             <Button onClick={()=>{}} variant="danger">삭제</Button>
                             <ListGroup className="mt-2">
                                 {
-                                    raidMembers.map((a, i)=>{
+                                    raidMembers?.map((a, i)=>{
                                         return (
                                             <ListGroup.Item key={i} action variant={transStatus(a.status)}>{a.name}</ListGroup.Item>
                                         )
@@ -58,7 +61,7 @@ function RaidMemberModal(){
                             <ListGroup className="mt-2">
                                 { 
                                     state.group.members.map((a, i) => {
-                                        if(raidMembers.find( x => x._id == a._id )){
+                                        if(raidMembers?.find( x => x._id == a._id )){
                                             return false;
                                         } else {
                                             return ( 
@@ -89,15 +92,15 @@ function RaidMemberModal(){
     )
 
     function addRaidMember(){
-        // 오류로 리스트에 레이드에 이미 속한 멤버도 들어갈 수 있는 현상이 발견. 예외처리 해야할듯
         axios.put(server_address + '/raid/member', {
             raid_id: state.modal.raid_id, 
             user_id: selected.user_id, 
             user_name: selected.user_name, 
         }).then((result)=>{
-            console.log('addRaidMember result: ');
-            console.log(result);
-        // 220801 작업해야하는곳 - 결과 받고 리액션 해야할듯?
+            dispatch(setAlert({switch: true, variant: result.data.variant, message: result.data.message}));
+            setTimeout(()=>{
+                dispatch(setAlert({switch: false, variant: '', content: ''}));
+            }, 10000);
         })
 
     }

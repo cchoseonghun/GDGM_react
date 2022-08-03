@@ -159,10 +159,9 @@ function Raid(){
             user_id: user_id, 
             target_status: target_status, 
         }).then((result)=>{
-            console.log(result);
-            // 소속, 대기 명단 최신화.. 랑 modal 닫았을 때 인원버튼, status 최신화
-            // 버튼은 됐나?
-            window.location.replace('/raid');
+            setTimeout(()=>{
+                getRaids();
+            }, 500)
         })
     }
 
@@ -178,11 +177,11 @@ function Raid(){
                 user_id: JSON.parse(localStorage.getItem('session_user'))._id, 
             }
         }).then((result)=>{
-            dispatch(setAlert({switch: true, variant: result.data.variant, message: result.data.message}));
-            setTimeout(()=>{
-                dispatch(setAlert({switch: false, variant: '', content: ''}));
-            }, 10000);
-            window.location.replace('/raid');
+            // dispatch(setAlert({switch: true, variant: result.data.variant, message: result.data.message}));
+            // setTimeout(()=>{
+            //     dispatch(setAlert({switch: false, variant: '', content: ''}));
+            // }, 10000);
+            navigate(0)
         })
     }
 
