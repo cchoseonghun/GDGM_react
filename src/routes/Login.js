@@ -17,7 +17,7 @@ function Login(){
         <>
         <Container>
             <h1 onClick={()=>{navigate('/')}} className="mt-5">공대공머</h1>
-            <InputGroup className="mb-3 mt-5">
+            <InputGroup className="mb-3 mt-5" style={{ width: '18rem', marginLeft: 'auto', marginRight: 'auto' }}>
                 <Form.Control
                 placeholder="이름입력"
                 name="name"

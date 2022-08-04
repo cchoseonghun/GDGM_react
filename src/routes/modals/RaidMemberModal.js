@@ -6,21 +6,14 @@ import axios from 'axios';
 import { setShow } from '../../store/modalSlice';
 import { setAlert } from '../../store/alertSlice'
 
-
-
-function RaidMemberModal(){
+function RaidMemberModal(props){
     let state = useSelector((state)=> state );
     let dispatch = useDispatch();
 
     const server_address = process.env.REACT_APP_SERVER_ADDRESS;
 
     const handleClose = () => dispatch(setShow(false));
-    let [raidMembers, setRaidMembers] = useState([]);
     let [selected, setSelected] = useState( {} );
-
-    useEffect(()=>{
-        getRaidMembers();
-    }, [])
 
     return (
         <Modal 
@@ -38,12 +31,25 @@ function RaidMemberModal(){
                     </ListGroup>
                     <Tab.Content>
                         <Tab.Pane eventKey="#link1">
-                            <Button onClick={()=>{}} variant="danger">삭제</Button>
+                            <Button onClick={deleteRaidMember} variant="danger">삭제</Button>
                             <ListGroup className="mt-2">
                                 {
-                                    raidMembers?.map((a, i)=>{
+                                    state.raid.data &&
+                                    state.raid.data.find(x => x._id == state.modal.raid_id).members.map((a, i)=>{
                                         return (
-                                            <ListGroup.Item key={i} action variant={transStatus(a.status)}>{a.name}</ListGroup.Item>
+                                            <ListGroup.Item key={i} 
+                                                onClick={(e)=>{
+                                                    setSelected({
+                                                    user_id: e.target.dataset.id, 
+                                                    user_name: e.target.innerHTML, 
+                                                    })
+                                                }} 
+                                                action 
+                                                variant={transStatus(a.status)}
+                                                data-id={a._id}
+                                            >
+                                            {a.name}
+                                            </ListGroup.Item>
                                         )
                                     })
                                 }
@@ -59,9 +65,10 @@ function RaidMemberModal(){
                             <Button variant="outline-primary" onClick={()=>{}}>검색</Button>
                             </InputGroup> */}
                             <ListGroup className="mt-2">
-                                { 
+                                {
+                                    state.raid.data &&
                                     state.group.members.map((a, i) => {
-                                        if(raidMembers?.find( x => x._id == a._id )){
+                                        if(state.raid.data.find(x => x._id == state.modal.raid_id).members.find(x => x._id == a._id)) {
                                             return false;
                                         } else {
                                             return ( 
@@ -91,6 +98,22 @@ function RaidMemberModal(){
         </Modal>
     )
 
+    function deleteRaidMember(){
+        axios.delete(server_address + '/raid/member', {
+            data: {
+                raid_id: state.modal.raid_id, 
+                user_id: selected.user_id, 
+            }
+        }).then((result)=>{
+            dispatch(setAlert({switch: true, variant: result.data.variant, message: result.data.message}));
+            setTimeout(()=>{
+                dispatch(setAlert({switch: false, variant: '', content: ''}));
+            }, 10000);
+            props.getRaids();
+            handleClose();
+        })
+    }
+
     function addRaidMember(){
         axios.put(server_address + '/raid/member', {
             raid_id: state.modal.raid_id, 
@@ -101,16 +124,8 @@ function RaidMemberModal(){
             setTimeout(()=>{
                 dispatch(setAlert({switch: false, variant: '', content: ''}));
             }, 10000);
-        })
-
-    }
-
-    function getRaidMembers(){
-        let _id = state.modal.raid_id;
-        axios.get(server_address + '/raid', {
-            params: { _id: _id }
-        }).then((result)=>{
-            setRaidMembers(result.data.members);
+            props.getRaids();
+            handleClose();
         })
     }
 

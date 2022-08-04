@@ -33,7 +33,8 @@ const persistConfig = {
     storage: storage, 
     blacklist: [ 
         'alert', 
-        'raid', 
+        'modal'
+        // 'raid', 
     ], //유지시키지 않을 리스트
     // whitelist: [ 'group' ], 
 };

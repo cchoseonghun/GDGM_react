@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { Container, Badge, Button, Alert } from 'react-bootstrap';
+import { Container, Badge, Button, Alert, Card } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { setGroup } from '../store/groupSlice';
@@ -23,24 +23,22 @@ function Groups(){
         <>
         { state.alert.switch && <Alert key={state.alert.variant} variant={state.alert.variant}>{state.alert.message}</Alert> }
         <Container className="mt-5">
-            {/* <Button onClick={()=>{
-                dispatch(setAlert({switch: true, variant: 'primary', message: '테스트입니다'}));
-                setTimeout(()=>{
-                    dispatch(setAlert({switch: false, variant: '', message: ''}));
-                }, 10000)
-            }} variant="outline-primary" >alert테스트</Button> */}
-            <Button onClick={()=>{showModal('AddGroup')}} variant="outline-primary" >공대추가</Button>
-            {
-                list.length > 0 ?
-                list.map( (a, i) => 
-                    <h1 key={i}>
-                        {/* <Badge bg="success" onClick={()=>{selectGroup(a._id, a.name, a.members)}}>{a.name}</Badge> */}
-                        <Button className="ms-1" onClick={()=>{selectGroup(a._id, a.name, a.members)}} variant="success" >{a.name}</Button>
-                        {/* <Button className="ms-1" onClick={()=>{showModal('GroupSetting')}} variant="outline-info" >세팅</Button> */}
-                    </h1> 
-                    ) : 
-                <h1>가입된 공격대가 없습니다.</h1>
-            }
+            <div className="btn-group mb-2">
+                <Button onClick={()=>{showModal('AddGroup')}} variant="outline-primary" >공대추가</Button>
+            </div>
+            <Card className="text-center" style={{ width: '18rem', marginLeft: 'auto', marginRight: 'auto' }}>
+            <Card.Body>
+                <div className='d-grid gap-2'>
+                {
+                    list.length > 0 ?
+                    list.map( (a, i) => 
+                        <Button key={i} onClick={()=>{selectGroup(a._id, a.name, a.members)}} variant="success" size="lg">{a.name}</Button>
+                        ) : 
+                        <Button variant="secondary" size="lg">가입된 공격대가 없습니다.</Button>
+                }
+                </div>
+            </Card.Body>
+            </Card>
         </Container>
         { state.modal.modalName == 'AddGroup' && <AddGroupModal /> }
         </>

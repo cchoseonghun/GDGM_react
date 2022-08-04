@@ -75,7 +75,7 @@ function Raid(){
             }
         </Container>
         { state.modal.modalName == 'AddRaid' && <AddRaidModal getRaids={getRaids} /> }
-        { state.modal.modalName == 'RaidMember' && <RaidMemberModal /> }
+        { state.modal.modalName == 'RaidMember' && <RaidMemberModal getRaids={getRaids} /> }
         { state.modal.modalName == 'InviteCode' && <InviteCodeModal /> }
         { state.modal.modalName == 'GroupMember' && <GroupMemberModal /> }
         </>
