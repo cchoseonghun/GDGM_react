@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { Container, Carousel, Card, Button, Dropdown, DropdownButton, Badge, Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useQuery } from 'react-query';
 
 import AddRaidModal from './modals/AddRaidModal';
 import RaidMemberModal from './modals/RaidMemberModal';
@@ -19,6 +20,8 @@ function Raid(){
     let navigate = useNavigate();
 
     const server_address = process.env.REACT_APP_SERVER_ADDRESS;
+    let session_user = JSON.parse(localStorage.getItem('session_user'));
+
     const [index, setIndex] = useState(0);
 
     const handleSelect = (selectedIndex, e) => {
@@ -28,6 +31,19 @@ function Raid(){
     useEffect(()=>{
         getRaids();
     }, [])
+
+    let queryResult = useQuery('queryName', ()=>{
+        let group_id = state.group._id;
+        return axios.get(server_address + '/raids', {
+                params: { 
+                    group_id: group_id, 
+                    user_id: session_user._id, 
+                }
+            }).then((result)=>{
+                dispatch(setRaid(result.data));
+                return result.data;
+            })
+    })
 
     return (
         <>
@@ -152,8 +168,7 @@ function Raid(){
     }
 
     function changeStatus(raid_id, target_status){
-        let user_id = JSON.parse(localStorage.getItem('session_user'))._id;
-        // raid_id, user_id, target_status 로 유저 상태변경하는 ajax
+        let user_id = session_user._id;
         axios.put(server_address + '/raid/member/status', {
             raid_id: raid_id, 
             user_id: user_id, 
@@ -206,7 +221,6 @@ function Raid(){
 
     function getRaids(){
         let group_id = state.group._id;
-        let session_user = JSON.parse(localStorage.getItem('session_user'));
         axios.get(server_address + '/raids', {
             params: { 
                 group_id: group_id, 
